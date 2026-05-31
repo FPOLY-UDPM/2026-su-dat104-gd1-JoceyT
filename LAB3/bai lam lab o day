@@ -1,0 +1,59 @@
+select
+[first_name],
+[last_name],
+[store_name]
+from [BikeStores].[sales].[staffs]
+join [sales].[stores]
+on [sales].[staffs].[store_id]=[sales].[staffs].[store_id]
+
+------
+select
+[last_name]+' '+[first_name] as 'Tên KH'
+,[email]
+,[phone]
+,[street]
+,[city]
+,[state]
+,[order_date]
+,[shipped_date]
+from [sales].[orders]
+join [sales].[customers]
+on [sales].[orders].[customer_id]=[sales].[customers].[customer_id]
+
+-------
+select
+n.first_name+' '+n.last_name as 'Nhân viên'
+,s.first_name+' '+s.last_name as 'Quản lý'
+
+from [BikeStores].[sales].[staffs] as n
+join [BikeStores].[sales].[staffs] as s
+on n.[staff_id]=s.manager_id
+
+------
+select
+s.[store_name] as 'Cửa Hàng'
+,count (n.staff_id) as 'Số NV'
+
+from [sales].[stores] as s
+join [sales].[staffs] as n
+on n.[store_id]=s.[store_id]
+group by s.store_name
+
+------
+select 
+t.order_date
+, s.product_id
+,sum (s.quantity) as 'Tổng sp'
+from sales.order_items as s
+join sales.orders as t
+on s.order_id=t.order_id
+group by t.order_date,s.product_id
+
+-----
+select 
+s.[product_name] as 'tên sp'
+, avg (s.[list_price]) as 'TB'
+from production.products as s
+ ,sales.order_items as n
+where s.[product_id] = n.[product_id]
+group by s.[product_name]
