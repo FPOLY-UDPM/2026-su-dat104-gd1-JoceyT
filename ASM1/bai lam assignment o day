@@ -1,0 +1,64 @@
+-----first_name, last_name, state của tất cả các khách hàng ở NewYork, thứ tự tăng dần của first_name
+Select 
+[first_name] as 'Họ'
+, [last_name] as 'Tên'
+, [state] as 'Vị trí'
+
+From sales.customers as K
+Where [state] like 'NY'
+Order by [first_name]  ASC
+
+-------Đếm tổng số các khách hàng theo từng thành phố thuộc bang NY
+Select 
+ [city] as 'Thành Phố'
+,Count ([city]) as 'Số khách hàng' 
+From sales.customers as K
+Where  [state] like 'NY'  
+Group by city
+Having COUNT (city) >=10
+Order by city  DESC
+
+-----Đếm số lượng các đơn đặt hàng theo từng năm. 
+Select 
+Year ([order_date]) as 'Năm'
+,Count ([order_id]) as  'Số đơn hàng'
+From sales.orders
+Group by Year ([order_date])
+
+------Tìm các khách hàng có tên bắt đầu bằng chữ “W” hoặc kết thúc bằng chữ “a”.
+Select 
+[first_name] as 'Họ'
+, [last_name] as 'Tên'
+, [state] as 'Vị trí'
+
+From sales.customers as K
+Where [first_name] like 'W%'
+OR [last_name] like '%a'
+
+-------Tìm các sản phẩm có năm sản xuất 2018 và có giá lớn hơn 1000. 
+Select
+product_name as 'Tên sản phẩm'
+,model_year as 'Năm sản xuất'
+From production.products as s
+Where s.model_year like '2018'
+and s.list_price >1000
+
+---------Tìm các đơn đặt hàng có ngày đặt hàng từ tháng 2 năm 2016 đến tháng 2 năm 2017. Hãy cho biết tháng nào có số lượng đơn đặt hàng cao nhất. 
+
+Select 
+YEAR([order_date]) as 'Năm'
+,MONTH([order_date]) as 'Tháng'
+, Count (order_id) as 'Số đơn hàng'
+
+
+From sales.orders as D
+Where order_date >= '2016-02-01' 
+and order_date <'2017-03-01'
+Group by YEAR([order_date]) ,MONTH([order_date])
+Order by Count (order_id) DESC
+------ Lỗi đợi Fix bổ sung bên trên
+,Case 
+	When (Count ([order_id])) = MAX (Count ([order_id])) Over (Partition by MONTH([order_date]))
+	Then 'Cao Nhất'
+	Else ''
+	END as Remark 
